@@ -1,7 +1,7 @@
 package com.pao.laboratory01;
 
-import com.pao.laboratory01.model.Dog;
 import com.pao.laboratory01.model.Cat;
+import com.pao.laboratory01.model.Dog;
 
 import java.util.Arrays;
 
