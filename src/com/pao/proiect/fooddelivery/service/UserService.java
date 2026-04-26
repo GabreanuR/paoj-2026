@@ -7,10 +7,8 @@ import com.pao.proiect.fooddelivery.exception.UserNotFoundException;
 import java.util.*;
 
 public class UserService {
-    // Implementare Singleton
     private static UserService instance;
 
-    // BIFĂM CERINȚA: Folosirea unui Map (Cheia este email-ul, Valoarea este Clientul)
     private final Map<String, Client> clienti;
     private final List<Driver> soferi;
 
@@ -33,7 +31,6 @@ public class UserService {
 
     public Client findClientByEmail(String email) {
         if (!clienti.containsKey(email)) {
-            // BIFĂM CERINȚA: Aruncarea unei excepții custom
             throw new UserNotFoundException("Nu a fost găsit niciun client cu emailul: " + email);
         }
         return clienti.get(email);
@@ -55,7 +52,6 @@ public class UserService {
         }
     }
 
-    // Metodă pentru a bifa operația de "șterge" cerută la punctul 2.3
     public void deleteClient(String email) {
         if (!clienti.containsKey(email)) {
             throw new UserNotFoundException("Nu putem șterge: Clientul cu emailul " + email + " nu există!");

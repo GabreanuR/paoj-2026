@@ -11,10 +11,10 @@ public class Driver extends User {
     }
 
     public String getNumarInmatriculare() { return numarInmatriculare; }
-    public boolean isEsteDisponibil() { return esteDisponibil; }
+    public boolean isDisponibil() { return esteDisponibil; }
 
     public void setNumarInmatriculare(String numarInmatriculare) { this.numarInmatriculare = numarInmatriculare; }
-    public void setEsteDisponibil(boolean esteDisponibil) { this.esteDisponibil = esteDisponibil; }
+    public void setDisponibil(boolean esteDisponibil) { this.esteDisponibil = esteDisponibil; }
 
     @Override
     public String toString() {

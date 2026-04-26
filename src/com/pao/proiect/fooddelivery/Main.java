@@ -11,11 +11,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Obținem instanțele unice (Singleton) ale serviciilor noastre
         UserService userService = UserService.getInstance();
         OrderService orderService = OrderService.getInstance();
 
-        System.out.println("=== 1. POPULAREA SISTEMULUI CU DATE ===");
+        System.out.println("=== 1. POPULAREA SISTEMULUI (Acțiunile 1, 2, 3, 4) ===");
 
         Address adresa1 = new Address("Strada Academiei 14", "București", "010014");
         Address adresa2 = new Address("Bulevardul Unirii 10", "București", "030167");
@@ -24,12 +23,12 @@ public class Main {
         Client client2 = new Client("Andrei", "0722222222", "andrei@email.com", adresa2);
         Driver sofer1 = new Driver("Mihai", "0733333333", "mihai@livrari.ro", "B-99-LIV");
 
+        // Acțiunea 1: Adaugă client
         userService.addClient(client1);
         userService.addClient(client2);
+
+        // Acțiunea 2: Adaugă șofer
         userService.addDriver(sofer1);
-
-        userService.deleteClient("andrei@email.com");
-
         System.out.println();
         userService.afiseazaTotiClientii();
         System.out.println();
@@ -37,6 +36,7 @@ public class Main {
         Restaurant rest1 = new Restaurant("Burger Place", adresa2);
         Restaurant rest2 = new Restaurant("Pizza OK", adresa1);
 
+        // Acțiunea 3: Adaugă restaurant
         orderService.addRestaurant(rest1);
         orderService.addRestaurant(rest2);
 
@@ -44,52 +44,61 @@ public class Main {
         MenuItem cartofi = new MenuItem("Cartofi prăjiți", 10.0);
         MenuItem pizza = new MenuItem("Pizza Margherita", 40.0);
 
-        // Adăugăm produsele direct în meniul restaurantului
+        // Acțiunea 4: Adaugă preparate în meniu
         rest1.addMenuItem(burger);
         rest1.addMenuItem(cartofi);
         rest2.addMenuItem(pizza);
 
-        System.out.println("\n=== 2. TESTARE EXCEPȚII (UserNotFoundException) ===");
+        System.out.println("\n=== 2. CĂUTARE ȘI ȘTERGERE (Acțiunile 9, 10) ===");
         try {
+            // Acțiunea 9: Caută client (cu tratare excepție)
             System.out.println("Căutăm clientul razvan@email.com...");
             Client gasit = userService.findClientByEmail("razvan@email.com");
             System.out.println("Găsit: " + gasit.getNume());
 
-            System.out.println("Căutăm clientul inexistent@email.com...");
-            userService.findClientByEmail("inexistent@email.com"); // Aici va crăpa intenționat
+            System.out.println("Căutăm un client inexistent...");
+            userService.findClientByEmail("inexistent@email.com");
         } catch (UserNotFoundException e) {
             System.out.println("EXCEPȚIE PRINSĂ: " + e.getMessage());
         }
 
-        System.out.println("\n=== 3. SIMULAREA UNUI FLUX DE COMANDĂ ===");
+        System.out.println();
+        // Acțiunea 10: Șterge client
+        userService.deleteClient("andrei@email.com");
+
+        System.out.println("\n=== 3. FLUX DE COMANDĂ (Acțiunile 5, 6, 7) ===");
 
         List<MenuItem> produseComandate = new ArrayList<>();
         produseComandate.add(burger);
         produseComandate.add(cartofi);
 
+        // Acțiunea 5: Plasează comanda
         Order comanda1 = orderService.placeOrder(client1, rest1, produseComandate);
 
-        // Testăm a doua excepție (NoAvailableDriverException)
         try {
+            // Acțiunea 6: Alocă șofer
             orderService.assignDriverToOrder(comanda1);
-            comanda1.setStatus("IN_LIVRARE");
-            System.out.println("Status comandă actualizat: " + comanda1.getStatus());
 
-            // Facem șoferul indisponibil ca să testăm excepția la următoarea comandă
-            comanda1.setStatus("FINALIZATA");
-            if (comanda1.getSofer() != null) {
-                comanda1.getSofer().setEsteDisponibil(true);
-            }
+            // Acțiunea 7: Actualizează statusul
+            orderService.updateOrderStatus(comanda1, "IN_LIVRARE");
+            orderService.updateOrderStatus(comanda1, "FINALIZATA");
 
         } catch (NoAvailableDriverException e) {
             System.out.println("EXCEPȚIE PRINSĂ: " + e.getMessage());
         }
 
-        System.out.println("\n=== 4. RECENZII ȘI ACTUALIZARE RATING ===");
+        System.out.println("\n=== 4. RECENZII ȘI RATING (Acțiunea 8) ===");
 
+        // Acțiunea 8: Adaugă recenzie
         orderService.addReview(client1, rest1, 5, "Cei mai buni burgeri, livrare rapidă!");
 
-        System.out.println("\n=== 5. RAPOARTE FINALE (TreeSet) ===");
+        System.out.println("\n=== 5. RAPOARTE FINALE (Metodele care apăreau unused) ===");
+
+        orderService.getClientOrderHistory(client1);
+        System.out.println();
+
+        orderService.getRecenziiPentruRestaurant(rest1);
+        System.out.println();
 
         orderService.getTopRestaurants();
     }

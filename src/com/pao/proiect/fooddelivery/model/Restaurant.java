@@ -3,6 +3,7 @@ package com.pao.proiect.fooddelivery.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Objects;
 
 public class Restaurant implements Comparable<Restaurant> {
     private final String id;
@@ -68,6 +69,6 @@ public class Restaurant implements Comparable<Restaurant> {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id);
+        return Objects.hash(id);
     }
 }

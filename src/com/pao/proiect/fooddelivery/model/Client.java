@@ -1,5 +1,7 @@
 package com.pao.proiect.fooddelivery.model;
 
+import java.util.Objects;
+
 public class Client extends User {
     private Address adresaLivrare;
 
@@ -27,6 +29,6 @@ public class Client extends User {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(this.getEmail());
+        return Objects.hash(this.getEmail());
     }
 }
