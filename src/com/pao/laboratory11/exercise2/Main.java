@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.DoubleSummaryStatistics;
 import java.util.stream.Collectors;
@@ -17,7 +15,6 @@ public class Main {
         try {
             run();
         } catch (IOException e) {
-            // Keep deterministic checker output.
         }
     }
 
@@ -61,10 +58,10 @@ public class Main {
                 case "REPORT_MONTH": {
                     String month = p[1];
                     DoubleSummaryStatistics stats = txs.stream()
-                            .filter(tx -> tx.date.startsWith(month))
-                            .collect(Collectors.summarizingDouble(tx -> tx.amount));
+                            .filter(tx -> tx.getDate().startsWith(month))
+                            .collect(Collectors.summarizingDouble(Tx::getAmount));
 
-                    System.out.printf(Locale.US, "MONTH %s total=%.2f count=%d%n",
+                    System.out.printf("MONTH %s total=%.2f count=%d%n",
                             month, stats.getSum(), stats.getCount());
                     break;
                 }
@@ -72,10 +69,10 @@ public class Main {
                 case "REPORT_ACCOUNT": {
                     String account = p[1];
                     DoubleSummaryStatistics stats = txs.stream()
-                            .filter(tx -> tx.account.equals(account))
-                            .collect(Collectors.summarizingDouble(tx -> tx.amount));
+                            .filter(tx -> tx.getAccount().equals(account))
+                            .collect(Collectors.summarizingDouble(Tx::getAmount));
 
-                    System.out.printf(Locale.US, "ACCOUNT %s total=%.2f count=%d%n",
+                    System.out.printf("ACCOUNT %s total=%.2f count=%d%n",
                             account, stats.getSum(), stats.getCount());
                     break;
                 }
@@ -89,7 +86,7 @@ public class Main {
                     }
 
                     Map<String, Long> counts = txs.stream()
-                            .collect(Collectors.groupingBy(tx -> tx.channel, Collectors.counting()));
+                            .collect(Collectors.groupingBy(Tx::getChannel, Collectors.counting()));
 
                     counts.entrySet().stream()
                             .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder())
@@ -100,7 +97,6 @@ public class Main {
                 }
 
                 default:
-                    // Ignore unknown commands.
                     break;
             }
         }
@@ -114,23 +110,5 @@ public class Main {
             }
         }
         return null;
-    }
-
-    private static final class Tx {
-        private final int id;
-        private final double amount;
-        private final String date;
-        private final String country;
-        private final String channel;
-        private final String account;
-
-        private Tx(int id, double amount, String date, String country, String channel, String account) {
-            this.id = id;
-            this.amount = amount;
-            this.date = date;
-            this.country = country;
-            this.channel = channel;
-            this.account = account;
-        }
     }
 }
