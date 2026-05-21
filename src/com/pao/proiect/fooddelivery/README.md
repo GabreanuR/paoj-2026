@@ -30,3 +30,15 @@ Arhitectura include următoarele 8 entități principale:
 6. `MenuItem` — Reprezintă un produs finit din meniu.
 7. `Order` — Modelează o comandă și își calculează automat prețul total.
 8. `Review` — Leagă un client de un restaurant, stocând nota și feedback-ul.
+---
+
+## 2. Etapa II — Persistență JDBC și Audit
+
+În această etapă, datele au fost migrate din memoria aplicației într-o bază de date relațională (MySQL), respectând următoarele implementări tehnice:
+
+* **Schema SQL (`schema.sql`):** Baza de date conține 7 tabele (`clienti`, `soferi`, `restaurante`, `produse`, `comenzi`, `comenzi_produse`, `recenzii`), interconectate prin 8 chei străine (Foreign Keys), respectând clauzele de `DROP TABLE` și tipul `VARCHAR(36)` pentru ID-urile de tip UUID.
+* **Conexiune Singleton:** Conexiunea la baza de date se face printr-o clasă unică ce citește credențialele din fișierul `resources/db.properties`.
+* **Repository Pattern (CRUD):** Am implementat interfața generică `Repository<T, ID>` pentru 4 entități: `Client`, `Driver`, `Restaurant` și `Review`. Toate interogările folosesc exclusiv `PreparedStatement` și se închid curat prin blocuri `try-with-resources`.
+* **Tranzacții JDBC:** Plasarea unei comenzi (în tabelul `comenzi` și tabelul de legătură `comenzi_produse`) se face printr-o tranzacție explicită (`setAutoCommit(false)`), cu `commit()` în caz de succes și `rollback()` automat la orice excepție (demonstrat în `Main`).
+* **Interogări JOIN:** `DeliveryService` expune 3 metode complexe de raportare bazate pe `INNER JOIN` și `LEFT JOIN` (ex: calcularea rating-ului mediu direct din baza de date, istoricul complet al unei comenzi).
+* **AuditService:** Implementat ca Singleton thread-safe (folosind `ReentrantLock`). Acesta scrie automat un fișier `audit.csv` în modul *append*, înregistrând numele fiecărei acțiuni efectuate în sistem alături de timestamp-ul exact.

@@ -20,6 +20,7 @@ public abstract class User {
     public String getTelefon() { return telefon; }
     public String getEmail() { return email; }
 
+    public void setId(String id) { this.id = id; }
     public void setTelefon(String telefon) { this.telefon = telefon; }
     public void setEmail(String email) { this.email = email; }
 

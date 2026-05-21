@@ -153,7 +153,7 @@ Exemple (pentru tema *Bibliotecă*):
   - **Cel puțin 2 relații** de tip `FOREIGN KEY` între tabele
   - `DROP TABLE IF EXISTS` la început (pentru re-rulare curată)
 
-- [ ] Fișier **`db.properties`** în `resources/` pentru configurarea conexiunii:
+- [ ] Fișier **`db.properties`** în `com.pao.proiect.fooddelivery.resources/` pentru configurarea conexiunii:
   ```properties
   db.url=jdbc:mysql://localhost:3306/paoj_proiect
   db.user=root
@@ -181,7 +181,7 @@ Exemple (pentru tema *Bibliotecă*):
 - [ ] Implementează câte un **repository concret** pentru cel puțin **4 dintre clasele** din Etapa I
   _(ex: `CarteRepository`, `CititorRepository`, `ImprumutRepository`, `AutorRepository`)_
 - [ ] Toate interogările SQL folosesc **`PreparedStatement`** — nu `Statement` cu concatenare de string-uri
-- [ ] Toate resursele (`Connection`, `PreparedStatement`, `ResultSet`) sunt închise corect cu **`try-with-resources`**
+- [ ] Toate resursele (`Connection`, `PreparedStatement`, `ResultSet`) sunt închise corect cu **`try-with-com.pao.proiect.fooddelivery.resources`**
 
 ### 2. Tranzacții JDBC
 
@@ -259,7 +259,7 @@ src/
     │   └── ...
     └── util/
         └── DatabaseConnection.java
-resources/
+com.pao.proiect.fooddelivery.resources/
     ├── schema.sql
     └── db.properties
 README.md                                ← definirea sistemului (Etapa I, punctul 1)
@@ -290,7 +290,7 @@ README.md                                ← definirea sistemului (Etapa I, punc
 | `schema.sql` complet (PK, ≥2 FK) + `db.properties` + `DatabaseConnection` singleton | 1p      |
 | Interfață generică `Repository<T, ID>`                                | 1p      |
 | CRUD complet (save, findById, findAll, update, delete) pentru ≥4 entități | 4p      |
-| Toate SQL-urile folosesc `PreparedStatement` + `try-with-resources`   | 2p      |
+| Toate SQL-urile folosesc `PreparedStatement` + `try-with-com.pao.proiect.fooddelivery.resources`   | 2p      |
 | ≥1 tranzacție JDBC explicită cu `commit` / `rollback`                 | 2p      |
 | ≥3 interogări SQL cu `JOIN`                                           | 2p      |
 | `AuditService` CSV thread-safe, apelat din toate cele 10 acțiuni      | 1p      |
