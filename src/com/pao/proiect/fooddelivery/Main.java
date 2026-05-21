@@ -21,6 +21,7 @@ public class Main {
         DeliveryService deliveryService = DeliveryService.getInstance();
 
         System.out.println("=== ETAPA 2: FOOD DELIVERY CU BAZĂ DE DATE ===");
+        curataBazaDeDate();
 
         Address adresa1 = new Address("Strada Academiei 14", "București", "010014");
         Address adresa2 = new Address("Bulevardul Unirii 10", "București", "030167");
@@ -51,7 +52,7 @@ public class Main {
         restRepo.save(rest2);
         audit.log("adauga_restaurante");
 
-        // Acțiunea 4: Adaugă produse (Nu avem un ProdusRepository deci facem manual)
+        // Acțiunea 4: Adaugă produse
         salveazaProdusInDB(burger, rest1.getId());
         salveazaProdusInDB(cartofi, rest1.getId());
         audit.log("adauga_produse");
@@ -118,6 +119,24 @@ public class Main {
             ps.setDouble(4, produs.getPret());
             ps.executeUpdate();
             System.out.println("Produs adăugat în DB: " + produs.getNume());
+        }
+    }
+
+    private static void curataBazaDeDate() {
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+
+            stmt.execute("DELETE FROM recenzii");
+            stmt.execute("DELETE FROM comenzi_produse");
+            stmt.execute("DELETE FROM comenzi");
+            stmt.execute("DELETE FROM produse");
+            stmt.execute("DELETE FROM restaurante");
+            stmt.execute("DELETE FROM soferi");
+            stmt.execute("DELETE FROM clienti");
+
+            System.out.println("[INFO] Baza de date a fost curățată pentru o nouă rulare de test.\n");
+        } catch (Exception e) {
+            System.err.println("Eroare la curățarea bazei de date: " + e.getMessage());
         }
     }
 }
